@@ -33,10 +33,6 @@ contract FundMe {
         s_priceFeed = AggregatorV3Interface(_priceFeed);
     }
 
-    function getVersion() public view returns (uint256) {
-        return s_priceFeed.version();
-    }
-
     function fund() public payable {
         uint256 ethPriceInUsd = (msg.value).getConversionRate(s_priceFeed);
         if (ethPriceInUsd < MINIMUM_USD) revert FundMe__NOT_ENOUGH_ETH();
@@ -70,6 +66,10 @@ contract FundMe {
     /**
      * View / Pure functions(Getters)
      */
+    function getVersion() public view returns (uint256) {
+        return s_priceFeed.version();
+    }
+
     function getAddressToAmountFunded(
         address _fundingAddress
     ) external view returns (uint256) {

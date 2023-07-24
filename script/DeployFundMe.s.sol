@@ -9,7 +9,7 @@ contract DeployFundMe is Script {
 
     function run() external returns (FundMe) {
         vm.startBroadcast();
-        fundMe = new FundMe(0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419);
+        fundMe = new FundMe(0x694AA1769357215DE4FAC081bf1f309aDC325306);
         vm.stopBroadcast();
 
         return fundMe;
