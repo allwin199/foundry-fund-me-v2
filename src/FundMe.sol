@@ -7,12 +7,12 @@ import {PriceConverter} from "./PriceConverter.sol";
 // similar to wallets, contracts can hold funds as well
 // To receive fund, we have to make the function as payable
 
-// cutom errors
-error FundMe__NOT_OWNER();
-error FundMe__WITHDRAW_FAILED();
-error FundMe__NOT_ENOUGH_ETH();
-
 contract FundMe {
+    // cutom errors
+    error FundMe__NOT_OWNER();
+    error FundMe__WITHDRAW_FAILED();
+    error FundMe__NOT_ENOUGH_ETH();
+
     address internal immutable i_owner;
 
     using PriceConverter for uint256;

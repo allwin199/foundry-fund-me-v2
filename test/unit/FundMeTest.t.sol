@@ -10,10 +10,14 @@ contract FundMeTest is Test {
     FundMe fundMe;
 
     uint256 private constant MINIMUM_USD = 5e18;
+    address private FUNDER = makeAddr("funder");
+    uint256 private constant STARTING_USER_BALANCE = 10 ether;
+    uint256 private constant FUNDING_AMOUNT = 1 ether;
 
     function setUp() external {
         deployer = new DeployFundMe();
         fundMe = deployer.run();
+        vm.deal(FUNDER, STARTING_USER_BALANCE);
     }
 
     function test_MinimimUsdIsFive() public {
@@ -41,8 +45,24 @@ contract FundMeTest is Test {
     //////        Fund()      //////
     ////////////////////////////////
     function test_FundMeRevertsIfNotEnoughEth() public {
-        vm.expectRevert();
+        vm.expectRevert(FundMe.FundMe__NOT_ENOUGH_ETH.selector);
         fundMe.fund();
+    }
+
+    modifier funder() {
+        vm.prank(FUNDER);
+        fundMe.fund{value: FUNDING_AMOUNT}();
+        _;
+    }
+
+    function test_FundUpdatesArrayDSIfFundedCorrectly() public funder {
+        address response = fundMe.getFunder(0);
+        assertEq(response, FUNDER);
+    }
+
+    function test_FundUpdatesMappingDSIfFundedCorrectly() public funder {
+        uint256 response = fundMe.getAddressToAmountFunded(FUNDER);
+        assertEq(response, FUNDING_AMOUNT);
     }
 }
 
