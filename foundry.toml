@@ -2,5 +2,7 @@
 src = "src"
 out = "out"
 libs = ["lib"]
-
+gas_reports = ["FundMe"]
+# gas_reports = ["*"]
+#forge test --gas-report // to see gas report for contracts
 # See more config options https://github.com/foundry-rs/foundry/tree/master/config
