@@ -66,7 +66,7 @@ contract FundMe {
     /**
      * View / Pure functions(Getters)
      */
-    function getVersion() public view returns (uint256) {
+    function getVersion() external view returns (uint256) {
         return s_priceFeed.version();
     }
 
