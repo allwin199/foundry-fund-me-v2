@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.18;
 
-import {Test, console} from "forge-std/Test.sol";
-import {FundMe} from "../src/FundMe.sol";
-import {DeployFundMe} from "../script/DeployFundMe.s.sol";
+import {Test, console2} from "forge-std/Test.sol";
+import {FundMe} from "../../src/FundMe.sol";
+import {DeployFundMe} from "../../script/DeployFundMe.s.sol";
 
 contract FundMeTest is Test {
     DeployFundMe deployer;
@@ -16,17 +16,17 @@ contract FundMeTest is Test {
         fundMe = deployer.run();
     }
 
-    function testMinimimUsdIsFive() public {
+    function test_MinimimUsdIsFive() public {
         uint256 fundMeMinUsd = fundMe.getMinimumUsd();
         assertEq(fundMeMinUsd, MINIMUM_USD);
     }
 
-    function testOwnerIsMsgSender() public {
+    function test_OwnerIsMsgSender() public {
         address owner = fundMe.getOwner();
         assertEq(owner, msg.sender);
     }
 
-    function testPriceFeedVersionIsAccurate() public {
+    function test_PriceFeedVersionIsAccurate() public {
         uint256 version = fundMe.getVersion();
         uint256 versionNum;
         if (block.chainid == 31337) {
@@ -35,6 +35,14 @@ contract FundMeTest is Test {
             versionNum = 4;
         }
         assertEq(version, versionNum);
+    }
+
+    /////////////////////////////////
+    //////        Fund()      //////
+    ////////////////////////////////
+    function test_FundMeRevertsIfNotEnoughEth() public {
+        vm.expectRevert();
+        fundMe.fund();
     }
 }
 
