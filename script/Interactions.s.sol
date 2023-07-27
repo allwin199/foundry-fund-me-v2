@@ -1,18 +1,21 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.18;
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.19;
 
-import {Script, console2} from "forge-std/Script.sol";
-import {DevOpsTools} from "lib/foundry-devops/src/DevOpsTools.sol";
+import {Script, console} from "forge-std/Script.sol";
 import {FundMe} from "../src/FundMe.sol";
+import {DevOpsTools} from "foundry-devops/src/DevOpsTools.sol";
 
 contract FundFundMe is Script {
-    uint256 private constant SEND_VALUE = 0.01 ether;
+    uint256 SEND_VALUE = 1 ether;
+    address USER = makeAddr("user");
 
-    function fundFundMe(address _mostRecentlyDeployed) public {
+    function fundFundMe(address mostRecentlyDeployed) public {
         vm.startBroadcast();
-        FundMe(payable(_mostRecentlyDeployed)).fund{value: SEND_VALUE}();
+        vm.deal(USER, 10 ether);
+        vm.prank(USER);
+        FundMe(payable(mostRecentlyDeployed)).fund{value: SEND_VALUE}();
         vm.stopBroadcast();
-        console2.log("Funded FundMe with %s", SEND_VALUE);
+        console.log("Funded FundMe with %s", SEND_VALUE);
     }
 
     function run() external {
@@ -24,4 +27,19 @@ contract FundFundMe is Script {
     }
 }
 
-contract WithdrawFundMe is Script {}
+contract WithdrawFundMe is Script {
+    function withdrawFundMe(address mostRecentlyDeployed) public {
+        vm.startBroadcast();
+        FundMe(payable(mostRecentlyDeployed)).withdraw();
+        vm.stopBroadcast();
+        console.log("Withdraw FundMe balance!");
+    }
+
+    function run() external {
+        address mostRecentlyDeployed = DevOpsTools.get_most_recent_deployment(
+            "FundMe",
+            block.chainid
+        );
+        withdrawFundMe(mostRecentlyDeployed);
+    }
+}
